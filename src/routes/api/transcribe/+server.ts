@@ -7,9 +7,10 @@ import fs from 'fs';
 import { tmpdir } from 'os';
 import path from 'path';
 import type { RequestEvent } from '@sveltejs/kit';
+import { OPENAI_API_KEY } from '$env/static/private';
 
 // Initialize OpenAI client with API key from environment variables
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
 export async function POST({ request }: RequestEvent) {
   // Parse form data from the request

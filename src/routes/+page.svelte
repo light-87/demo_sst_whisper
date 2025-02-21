@@ -10,16 +10,12 @@
   
 	// Array of 10 sample paragraphs.
 	const sampleScripts = [
-	  "This is paragraph 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-	  "This is paragraph 2. Vivamus lacinia odio vitae vestibulum vestibulum.",
-	  "This is paragraph 3. Cras vehicula, mi quis hendrerit fermentum, sapien ligula varius orci, a pretium purus nunc eu elit.",
-	  "This is paragraph 4. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.",
-	  "This is paragraph 5. Nulla vitae elit libero, a pharetra augue.",
-	  "This is paragraph 6. Donec ullamcorper nulla non metus auctor fringilla.",
-	  "This is paragraph 7. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
-	  "This is paragraph 8. Sed posuere consectetur est at lobortis.",
-	  "This is paragraph 9. Maecenas sed diam eget risus varius blandit sit amet non magna.",
-	  "This is paragraph 10. Aenean lacinia bibendum nulla sed consectetur."
+	  "Passage 1: I think people should not spend too much time on their hobby because beside because they has they they have umm they they has and their work their work and on their studying they have to do.",
+	  "Passage 2: like is there some other people like some of the heroes players like if we can talk about sachin tendulkar, he is really famous because he's really good player as well he's well known in world all of the worlds like we can say about some singers and players and actors they are famous as well",
+	  "Passage 3: yeah it's an interesting question this one but yeah i think i think usually the people rad about the that the they are interesting about either the the the uh the person who's famous or they then uh the author they they know so yeah yeah i think the they will read it only which is enjoyable to them. ",
+	  "Passage 4: Those people in the future I think because of because we have high level of education we are well educated so I think all of want to have a beautiful world in the future, so maybe in the future  we will admire those people who chan change our world who can make our world better and more beautiful.",
+	  "Passage 5: I think umm ahh maybe the whoze they working in the media and ur or who's they usually are presented in the media maybe the polititians maybe the uhh scientists and but i think the more known or more famous for the especially the young people are sport stars and movie stars.",
+	  "Passage 6: You know those actors especially the movie actors and the sports actor uh sorry the movie actors and the sports stars  they are very famous now in china because uh they can be seen by the people every day during the movie on the advertisements they can be seen all times so they are very famous and those people who are very rich",
 	];
   
 	onMount(() => {
