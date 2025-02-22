@@ -1,4 +1,4 @@
-// src/routes/api/transcribe/+server.js
+// src/routes/api/transcribe/+server.ts
 
 import { json } from '@sveltejs/kit';
 import OpenAI from 'openai';
@@ -8,6 +8,13 @@ import { tmpdir } from 'os';
 import path from 'path';
 import type { RequestEvent } from '@sveltejs/kit';
 import { OPENAI_API_KEY } from '$env/static/private';
+import ffmpegPath from 'ffmpeg-static';
+import ffmpeg from 'fluent-ffmpeg';
+
+if (!ffmpegPath) {
+    throw new Error('ffmpeg path not found');
+}
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 // Initialize OpenAI client with API key from environment variables
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
@@ -24,16 +31,29 @@ export async function POST({ request }: RequestEvent) {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   
-  // Create a temporary file path in the system's temp directory
-  const tempFilePath = path.join(tmpdir(), `audio_${Date.now()}.wav`);
+  // Create temporary file paths for the input and converted audio files
+  const inputFilePath = path.join(tmpdir(), `input_audio_${Date.now()}.wav`);
+  const convertedFilePath = path.join(tmpdir(), `converted_audio_${Date.now()}.wav`);
   
   try {
-    // Write the file buffer to the temporary file path
-    await fsPromises.writeFile(tempFilePath, buffer);
+    // Write the original file to the temporary input file path
+    await fsPromises.writeFile(inputFilePath, buffer);
     
-    // Call the OpenAI Whisper API using the temporary file stream
+    // Convert the audio to mono, 16kHz, PCM_S16LE WAV format using ffmpeg
+    await new Promise<void>((resolve, reject) => {
+      ffmpeg(inputFilePath)
+        .audioChannels(1)
+        .audioFrequency(16000)
+        .audioCodec('pcm_s16le')
+        .format('wav')
+        .on('end', resolve)
+        .on('error', reject)
+        .save(convertedFilePath);
+    });
+    
+    // Call the OpenAI Whisper API using the converted file stream
     const transcription = await openai.audio.transcriptions.create({
-      file: fs.createReadStream(tempFilePath),
+      file: fs.createReadStream(convertedFilePath),
       model: 'whisper-1',
       response_format: 'text'
     });
@@ -44,11 +64,12 @@ export async function POST({ request }: RequestEvent) {
     console.error('Transcription failed:', error);
     return json({ error: 'Transcription failed' }, { status: 500 });
   } finally {
-    // Clean up the temporary file after processing
+    // Clean up temporary files
     try {
-      await fsPromises.unlink(tempFilePath);
+      await fsPromises.unlink(inputFilePath);
+      await fsPromises.unlink(convertedFilePath);
     } catch (cleanupError) {
-      console.error('Failed to delete temporary file:', cleanupError);
+      console.error('Failed to delete temporary files:', cleanupError);
     }
   }
 }
